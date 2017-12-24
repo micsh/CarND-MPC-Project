@@ -3,6 +3,56 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 
+
+## Overview
+The purpose of this project is to develop a Model Predictive Controller  to steer a car around a track in the simulator. The simulator provides telemetry values containing the position of the car, its speed and orientation. it also provides the coordinates of waypoints along the track that the car needs to follow. The solution uses the IPOPT and CPPAD libraries to calculate an optimal solution in order to minimize the error. This solution plans a path, and tries to follow it by minizing the error from the planned to the actual.
+
+---
+## Vehicle Model
+The vehicle model used in this project is a kinematic model. It neglects all dynamic effects such as inertia, friction and torque. The model uses the following equations:
+
+    x[t+1] = x[t] + v[t] * cos(psi[t]) * dt
+    y[t+1] = y[t] + v[t] * sin(psi[t]) * dt
+    psi[t+1] = psi[t] + v[t] / Lf * delta[t] * dt
+    v[t+1] = v[t] + a[t] * dt
+    cte[t+1] = f(x[t]) - y[t] + v[t] * sin(epsi[t]) * dt
+    epsi[t+1] = psi[t] - psides[t] + v[t] / Lf * delta[t] * dt
+
+Here, **x** and **y** denote the position of the car, **psi** the orientation, **v** the velocity, **cte** the cross-track error and **epsi** the orientation error. **Lf** is the distance between the center of mass of the vehicle and the front wheels and affects the maneuverability. The vehicle model can be found in the class FG_eval.
+
+---
+## Pipeline
+The waypoints coordinates are transformed:
+
+    dx = ptsx[i] - x
+    dy = ptsy[i] - y
+    X = dx * cos(psi) - dy * sin(psi)
+    Y = dy * cos(psi) + dx * sin(psi)
+
+where **X** and **Y** denote coordinates in the vehicle coordinate system. Next state is therefore calculated intially as such:
+
+    state << 0, 0, 0, speed, cte, epsi
+
+where **cte** and **epsi** are calculated using a polyfit on the transformed values.
+
+## Latency
+But when accounting for latency in the system '**dt**', we add a little prediction and get:
+
+    psi = -speed * steer_value * dt / Lf
+    state << speed * dt, 0, psi, speed + throttle * dt, cte + speed * sin(epsi) * dt, epsi + psi
+
+The algorithm produces a projection of what to do in the next steps, so to deal with latency we need to incorporate the projected affect of the latency on our state.
+
+---
+## Lookahead and time-horizon
+The time **_N*dt_** defines the prediction time-horizon. A shorter time-horizon leads to a faster responding controler, but falls short in the projection planning and often finds it difficult to stay stable. Longer prediction time-horizon leads to a better behavior, but too long and it will not react quick enough to difference between predicted/project and actual. I have found a nice spot with N=25 and dt=0.1, which evalutes to an ahead-projection of 2.5 seconds, which was just about right for a good control of the vehicle and enough planning ahead. I have found that below 15 and over 40 provide less optimal results.
+
+---
+## Video
+[![video](https://img.youtube.com/vi/oCmpK5mJQYk/0.jpg)](https://youtu.be/oCmpK5mJQYk)
+
+---
+
 ## Dependencies
 
 * cmake >= 3.5
