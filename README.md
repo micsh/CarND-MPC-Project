@@ -5,7 +5,7 @@ Self-Driving Car Engineer Nanodegree Program
 
 
 ## Overview
-The purpose of this project is to develop a Model Predictive Controller  to steer a car around a track in the simulator. The simulator provides telemetry values containing the position of the car, its speed and orientation. it also provides the coordinates of waypoints along the track that the car needs to follow. The solution uses the IPOPT and CPPAD libraries to calculate an optimal solution in order to minimize the error. This solution plans a path, and tries to follow it by minizing the error from the planned to the actual.
+The goal of this project is to develop a Model Predictive Controller in C++, to steer a car around a track in the simulator. The simulator provides telemetry values containing the position of the car, its speed and orientation. it also provides the coordinates of waypoints along the track that the car needs to follow. The solution uses the IPOPT and CPPAD libraries to calculate an optimal solution in order to minimize the error. This solution plans a path, and tries to follow it by minizing the error from the planned to the actual.
 
 ---
 ## Vehicle Model
@@ -33,7 +33,7 @@ where **X** and **Y** denote coordinates in the vehicle coordinate system. Next 
 
     state << 0, 0, 0, speed, cte, epsi
 
-where **cte** and **epsi** are calculated using a polyfit on the transformed values.
+where **cte** and **epsi** are calculated using a **polyfit** evaluation on the transformed values.
 
 ## Latency
 But when accounting for latency in the system '**dt**', we add a little prediction and get:
