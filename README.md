@@ -45,7 +45,7 @@ The algorithm produces a projection of what to do in the next steps, so to deal 
 
 ---
 ## Lookahead and time-horizon
-The time **_N*dt_** defines the prediction time-horizon. A shorter time-horizon leads to a faster responding controler, but falls short in the projection planning and often finds it difficult to stay stable. Longer prediction time-horizon leads to a better behavior, but too long and it will not react quick enough to difference between predicted/project and actual. I have found a nice spot with N=25 and dt=0.1, which evalutes to an ahead-projection of 2.5 seconds, which was just about right for a good control of the vehicle and enough planning ahead. I have found that below 15 and over 40 provide less optimal results.
+The time **_N*dt_** defines the prediction time-horizon. A shorter time-horizon leads to a faster responding controler, but falls short in the projection planning and often finds it difficult to stay stable. Longer prediction time-horizon leads to a better behavior, but too long and it will not react quick enough to difference between predicted/project and actual. I have found a nice spot with N=10 and dt=0.1, which evalutes to an ahead-projection of 1 seconds, which was just about right for a good control of the vehicle and enough planning ahead. I have found that a much higher number, looks too far ahead, and is less accurate controlloing the vehicle.
 
 ---
 ## Video
